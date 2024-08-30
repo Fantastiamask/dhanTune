@@ -1,0 +1,33 @@
+{% extends 'basic.html' %}
+{% block content %}
+<style>
+.content {
+  max-width: 500px;
+  padding-left: 20%;
+  margin: auto;
+}
+</style>
+    <h1>Browse</h1>
+        <ul class="list-group">
+            {% for song in songs %}
+                <li class="list-group-item">{{song['name']}} &ensp;
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <a class="btn btn-outline-secondary btn-sm" role="button" aria-disabled="true" href="/play?p={{song['id']}}">Listen</a>
+                        &ensp;
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-plus-minus"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                {% for list in playlist%}
+                                <li><a class="dropdown-item" href="/add?song={{song['id']}}&list={{list[0]}}">{{list[1]}}</a></li>
+                                {% endfor %}
+                            </ul>
+                          </div>
+                      </div>
+                    
+                </li>
+            {% endfor %}
+            
+          </ul>
+{% endblock %}

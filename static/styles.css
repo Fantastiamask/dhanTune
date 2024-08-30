@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f5f5f5;
+}
+
+#player-container {
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+#album-art {
+    width:40%;
+    height: auto;
+}
+
+#song-info {
+    margin: 20px 0;
+}
+
+#seek-container {
+    margin-top: 20px;
+}
+
+#seek-bar {
+    width: 100%;
+}
+
+.content {
+    max-width: 75%;
+    text-align: left;
+    margin: auto;
+  }
+#nav{
+    background-color: #d9d7d7;
+}

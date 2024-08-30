@@ -1,0 +1,17 @@
+{% extends 'basic.html' %}
+{% block content %}
+<style>
+.content {
+  max-width: 500px;
+  padding-left: 20%;
+  margin: auto;
+}
+</style>
+    <h1>Search results: {{search}}</h1>
+        <ul class="list-group">
+            {% for song in songs %}
+                <li class="list-group-item">{{song['name']}} &ensp;<a class="btn btn-outline-secondary btn-sm" role="button" aria-disabled="true" href="/play?p={{song['id']}}">Listen</a></li>
+            {% endfor %}
+            
+          </ul>
+{% endblock %}
