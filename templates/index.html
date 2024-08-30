@@ -1,6 +1,30 @@
 {% extends 'basic.html' %}
 {% block content %}
-    <h1>Hello {{name}}!</h1>
+<style>
+    .card{
+        max-width: 500px;
+        margin: auto;
+    }
+    #search{
+        max-width: 500px;
+        margin: auto;
+    }
+</style>
+    <h1>Hello <strong>{{name}}</strong>!</h1>
     {{message}}
+    <form class="d-flex" role="search" action="/search" method="get" id="search">
+        <input class="form-control me-2" name="search" type="search" placeholder="search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <br>
+    <div class="card" style="width: 18rem;">
+        
+        <div class="card-header">
+          <strong>Actions</strong>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><a href="/browse" class="btn btn-secondary">Browse</a></li>
+        </ul>
+      </div>
 
 {% endblock %}

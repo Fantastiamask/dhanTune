@@ -242,6 +242,49 @@ def new_playlist():
     cur.execute("INSERT INTO playlists(name, username) VALUES(?, ?)", (name, username))
     con.commit()
     return redirect("/browse")
+@app.route("/add_song")
+def add_song():
+    name = request.args.get("name", False)
+    artist = request.args.get("artist", False)
+    track = request.args.get("track", False)
+    image = request.args.get("image", False)
+    if not name:
+        return redirect("/")
+    if not artist:
+        return redirect("/")
+    if not track:
+        return redirect("/")
+    if not image:
+        return redirect("/")
+    cur.execute("INSERT INTO songs(name, artist, url, image) VALUES(?, ?, ?, ?)", (name, artist, track, image))
+    con.commit()
+    return redirect("/?message=Added!")
+@app.route("/add_song_render")
+def add_song_render():
+    username = session.get("name")
+    cur.execute("SELECT rowid, name FROM playlists WHERE username = ?", (username, ))
+    playlists = cur.fetchall()
+    return render_template("add_song.html", name=username, playlist=playlists)
+@app.route("/add_user")
+def add_user():
+    username = request.args.get("username", False)
+    email = request.args.get("email", False)
+    password = request.args.get("password", False)
+    if not username:
+        return redirect("/")
+    if not email:
+        return redirect("/")
+    if not password:
+        return redirect("/")
+    cur.execute("INSERT INTO users(username, email, password) VALUES(?, ?, ?)", (username, email, password))
+    con.commit()
+    return redirect("/?message=Added!")
+@app.route("/add_user_render")
+def add_user_render():
+    username = session.get("name")
+    cur.execute("SELECT rowid, name FROM playlists WHERE username = ?", (username, ))
+    playlists = cur.fetchall()
+    return render_template("add_user.html", name=username, playlist=playlists)
 @app.route("/add")
 def add():
     song = request.args.get("song", False)
