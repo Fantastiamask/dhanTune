@@ -301,7 +301,7 @@ def add():
     check = cur.fetchone()
     if check[0] == 0:
         return redirect("/?message=error4")
-    cur.execute("SELECT count(*) FROM playlists_data WHERE song_id=?", (song))
+    cur.execute("SELECT count(*) FROM playlists_data WHERE song_id=? AND playlist_id=?", (song, playlist))
     check = cur.fetchone()
     if check[0] != 0:
         cur.execute("DELETE FROM playlists_data WHERE song_id=?", (song))
