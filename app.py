@@ -25,7 +25,7 @@ def hehe(playlist_id):
     cur.execute("SELECT count(*) FROM playlists_data WHERE playlist_id=?", (playlist_id))
     check = cur.fetchone()
     if check[0] == 0:
-        return False
+        return "none"
     cur.execute("SELECT song_id FROM playlists_data WHERE playlist_id=?",  (playlist_id))
     playlist_songs = cur.fetchall()
     playlist_data = []
@@ -153,12 +153,15 @@ def home():
 def selecter():
     playlist_id = request.args.get("p")
     if playlist_id:
-        if hehe(playlist_id):
+        he = hehe(playlist_id)
+        if he == True:
             name = playlist_name
             username = session.get("name")
             cur.execute("SELECT rowid, name FROM playlists WHERE username = ?", (username, ))
             playlists = cur.fetchall()
             return render_template('play.html', name=username, song_name=name, playlist=playlists, check=0, songs=playlist)
+        if he == "none":
+            return redirect("/?message=That+playlist+is+empty!+Add+some+songs!")
         else:
             return redirect("/?message=Playlist+Not+Found!")
     return redirect("/?message=Error!")
@@ -293,18 +296,18 @@ def add():
         return redirect("/?message=error1")
     if not playlist:
         return redirect("/?message=error2")
-    cur.execute("SELECT count(*) FROM songs WHERE rowid=?", (song))
+    cur.execute("SELECT count(*) FROM songs WHERE rowid=?", (song, ))
     check = cur.fetchone()
     if check[0] == 0:
         return redirect("/?message=error3")
-    cur.execute("SELECT count(*) FROM playlists WHERE rowid=?", (playlist))
+    cur.execute("SELECT count(*) FROM playlists WHERE rowid=?", (playlist, ))
     check = cur.fetchone()
     if check[0] == 0:
         return redirect("/?message=error4")
     cur.execute("SELECT count(*) FROM playlists_data WHERE song_id=? AND playlist_id=?", (song, playlist))
     check = cur.fetchone()
     if check[0] != 0:
-        cur.execute("DELETE FROM playlists_data WHERE song_id=?", (song))
+        cur.execute("DELETE FROM playlists_data WHERE song_id=?", (song, ))
         con.commit()
         return redirect("/?message=Removed!")
     cur.execute("INSERT INTO playlists_data(playlist_id, song_id) VALUES(?, ?)", (playlist, song))
