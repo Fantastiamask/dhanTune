@@ -8,13 +8,15 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"]="filesystem"
 Session(app)
 song = []
+
+allsong = []
 playlist = []
 playlist_name = 0
 playlists = 0
 
 
 def hehe(playlist_id):
-    global playlist, playlist_name
+    global playlist, playlist_name, songs
     cur.execute("SELECT count(*) FROM playlists WHERE rowid=?", (playlist_id))
     check = cur.fetchone()
     if check[0] == 0:
@@ -42,6 +44,20 @@ def hehe(playlist_id):
     }
     for row in playlist_data
     ]
+    cur.execute("SELECT song_id FROM playlists_data WHERE playlist_id=?", (playlist_id,))
+    songs_id = cur.fetchall()
+    songs_data = []
+    for id in songs_id:
+        cur.execute("SELECT rowid, name, artist, url, image FROM songs WHERE rowid= (?)", (id))
+        songs_data.append(cur.fetchone())
+    songs = [
+    {
+        "id": row[0],
+        "name": row[1],
+        "artist": row[2],
+    }
+    for row in songs_data
+    ]
     return True
 
     # with open(f'static/{file}') as f:
@@ -49,14 +65,14 @@ def hehe(playlist_id):
 # Load playlist from Database
 def songPlay(song_id):
     global playlist, playlist_name
-    cur.execute("SELECT count(*) FROM songs WHERE rowid=?", (song_id))
+    cur.execute("SELECT count(*) FROM songs WHERE rowid=?", (song_id, ))
     check = cur.fetchone()
     if check[0] == 0:
         return False
     # cur.execute("SELECT name FROM playlists WHERE id=?", (song_id))
     # playlist_name = cur.fetchone()
     # playlist_name = playlist_name[0]
-    cur.execute("SELECT rowid FROM songs WHERE rowid=?",  (song_id))
+    cur.execute("SELECT rowid FROM songs WHERE rowid=?",  (song_id, ))
     playlist_songs = cur.fetchall()
     playlist_data = []
     for id in playlist_songs:
@@ -75,7 +91,7 @@ def songPlay(song_id):
     return True
 
 def all_songs():
-    global song
+    global song, allsong
     # cur.execute("SELECT name FROM playlists WHERE id=?", (song_id))
     # playlist_name = cur.fetchone()
     # playlist_name = playlist_name[0]
@@ -85,7 +101,7 @@ def all_songs():
     for id in playlist_songs:
         cur.execute("SELECT rowid, name, artist, url, image FROM songs WHERE rowid= (?)", (id))
         playlist_data.append(cur.fetchone())
-    song = [
+    allsong = [
     {
         "id": row[0],
         "name": row[1],
@@ -159,7 +175,9 @@ def selecter():
             username = session.get("name")
             cur.execute("SELECT rowid, name FROM playlists WHERE username = ?", (username, ))
             playlists = cur.fetchall()
-            return render_template('play.html', name=username, song_name=name, playlist=playlists, check=0, songs=playlist)
+            if all_songs():
+                username = session.get("name")
+            return render_template('play.html', name=username, song_name=name, playlist=playlists, check=0, songs=playlist, list=songs, all_songs=allsong)
         if he == "none":
             return redirect("/?message=That+playlist+is+empty!+Add+some+songs!")
         else:
@@ -179,7 +197,7 @@ def browse():
         username = session.get("name")
         cur.execute("SELECT rowid, name FROM playlists WHERE username = ?", (username, ))
         playlists = cur.fetchall()
-        return render_template('browse.html', songs=song, check=1, playlist=playlists, name=username)
+        return render_template('browse.html', songs=allsong, check=1, playlist=playlists, name=username)
     else:
         return redirect("/")
     return redirect("/")
@@ -309,7 +327,7 @@ def add():
     if check[0] != 0:
         cur.execute("DELETE FROM playlists_data WHERE song_id=?", (song, ))
         con.commit()
-        return redirect("/?message=Removed!")
+        return redirect(f"playlist?p={playlist}")
     cur.execute("INSERT INTO playlists_data(playlist_id, song_id) VALUES(?, ?)", (playlist, song))
     con.commit()
     return redirect(f"playlist?p={playlist}")

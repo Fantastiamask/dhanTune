@@ -2,6 +2,47 @@
 
 {% extends 'basic.html' %}<br>
 {% block content %}
+<!-- Button trigger modal -->
+  <!-- Modal -->
+
+  
+  <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Songs to {{song_name}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <ul class="list-group">
+                {% for song in all_songs %}
+                <li class="list-group-item">{{song['name']}} &ensp;
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <a class="btn btn-outline-secondary btn-sm" role="button" aria-disabled="true" href="/play?p={{song['id']}}">Listen</a>
+                        &ensp;
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-plus-minus"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                {% for list in playlist%}
+                                <li><a class="dropdown-item" href="/add?song={{song['id']}}&list={{list[0]}}">{{list[1]}}</a></li>
+                                {% endfor %}
+                            </ul>
+                          </div>
+                      </div>
+                    
+                </li>
+            {% endfor %}
+                  
+                </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <style >
     /* Hide default controls but keep the seek bar */
     audio::-webkit-media-controls-panel {
@@ -48,9 +89,14 @@
 <br>
 <br>
 <ul class="list-group">
-    {% for song in songs %}
-        <li class="list-group-item">{{song['name']}} &ensp;</li>
-    {% endfor %}
+    {% for song in list %}
+    <li class="list-group-item">{{song['name']}} &ensp;
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+            Edit
+          </button>
+        
+    </li>
+{% endfor %}
     
   </ul>
 </div>
