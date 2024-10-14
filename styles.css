@@ -1,0 +1,58 @@
+body{
+    font-family: "Inter", system-ui;
+    padding: 20px;
+    background-image: linear-gradient(#66ADE2, #61BF8E);
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    color: white;
+
+}
+hr{
+    padding: 0px;
+    margin: 0px;    
+  }
+
+#hourly{
+    overflow-x: scroll; 
+    max-height: 70px; 
+
+}
+.search_toggle{
+   position: fixed;
+   top: 5px;
+   left: 5px;
+}
+@media (min-width: 699px) {
+    #hourly{
+        width: 50vw;
+    }
+    .large{
+        width: 50vw;
+    }
+    .search_toggle{
+        display: none;
+    }
+    
+}
+@media (max-width: 699px) {
+    #weather{
+        display: none;
+    }
+    .search_toggle{
+        display: block;
+    }
+}
+
+#name, #aa, #cond, #handl{
+    color: rgb(255, 255, 255);
+}
+
+.hourly::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hourly {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
